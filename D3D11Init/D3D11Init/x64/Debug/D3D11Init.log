@@ -1,2 +1,4 @@
-﻿  D3D11Init.cpp
-  D3D11Init.vcxproj -> C:\Users\chlgudtjn7\Desktop\Programming\DX11\D3D11Init\x64\Debug\D3D11Init.exe
+﻿  D3DApp.cpp
+C:\Users\Administrator\Documents\Directx11\D3D11Init\D3D11Init\D3DApp.cpp(38,23): warning C4552: '!=': 식의 결과가 사용되지 않습니다.
+C:\Users\Administrator\Documents\Directx11\D3D11Init\D3D11Init\D3DApp.cpp(57,20): warning C4101: 'desc' :참조되지 않은 지역 변수입니다.
+  D3D11Init.vcxproj -> C:\Users\Administrator\Documents\Directx11\D3D11Init\x64\Debug\D3D11Init.exe

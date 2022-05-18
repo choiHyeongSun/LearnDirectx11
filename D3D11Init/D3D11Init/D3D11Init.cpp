@@ -3,21 +3,22 @@
 
 #include "framework.h"
 #include "D3D11Init.h"
+#include "D3DApp.h"
 
-#include <d3d11.h>
-#include <d3dcompiler.h>
-#include <dxgi.h>
+
 
 #define MAX_LOADSTRING 100
 
 // 전역 변수:
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
-
+HWND g_Wnd;
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 
+int Width = 500;
+int Height = 500;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -30,21 +31,45 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     
     MyRegisterClass(hInstance);
 
+    
     // 애플리케이션 초기화를 수행합니다:
     if (!InitInstance (hInstance, nCmdShow))
     {
         return FALSE;
     }
 
-    MSG msg;
+    RECT rc3;
+    GetClientRect(g_Wnd, &rc3);
 
-    // 기본 메시지 루프입니다:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    auto width = rc3.right - rc3.left;
+    D3DApp* App = new D3DApp(Width,Height, g_Wnd);
+
+
+    if (!App->CreateApp(g_Wnd))
     {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
+        PostQuitMessage(0);
     }
 
+
+    FLOAT ClearColor[4] = { 255.0f,255.0f,255.0f,255.0f };
+    App->GetDeviceContext()->ClearRenderTargetView(App->GetRenderTargetView(), ClearColor);
+
+    MSG msg = { 0 };
+    
+    // 기본 메시지 루프입니다:
+    while (WM_QUIT != msg.message)
+    {
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
+
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        else
+        {
+            App->Render();
+        }
+    }
     return (int) msg.wParam;
 }
 
@@ -53,7 +78,8 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEXW wcex;
-
+    
+    
     wcex.cbSize = sizeof(WNDCLASSEX);
 
     wcex.style          = CS_HREDRAW | CS_VREDRAW;
@@ -75,30 +101,25 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // 인스턴스 핸들을 전역 변수에 저장합니다.
 
-   HWND hWnd = CreateWindowW(L"Directx11 Init", L"Directx11 Init", WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+   
+       
+   HWND hWnd = CreateWindowW(L"Directx11 Init", L"Directx11 Init", WS_OVERLAPPEDWINDOW,0
+      ,0,  Width, Height, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
       return FALSE;
    }
 
+   g_Wnd = hWnd;
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
 
    return TRUE;
 }
 
-//
-//  함수: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  용도: 주 창의 메시지를 처리합니다.
-//
-//  WM_COMMAND  - 애플리케이션 메뉴를 처리합니다.
-//  WM_PAINT    - 주 창을 그립니다.
-//  WM_DESTROY  - 종료 메시지를 게시하고 반환합니다.
-//
-//
+
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -108,7 +129,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             int wmId = LOWORD(wParam);
             // 메뉴 선택을 구문 분석합니다:
             switch (wmId)
-            {           
+            {          
+            case WM_PAINT:
+                
+                break;
             case IDM_EXIT:
                 DestroyWindow(hWnd);
                 break;
@@ -125,5 +149,4 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     }
     return 0;
 }
-
 
