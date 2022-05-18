@@ -1,0 +1,16 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "0227c3ff-4a94-48dd-bee4-991420020022": {
+      "ProjectGuid": "0227c3ff-4a94-48dd-bee4-991420020022",
+      "DisplayName": "D3D11Init",
+      "ColorIndex": 0
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "기타 파일",
+      "ColorIndex": -1
+    }
+  },
+  "NextColorIndex": 1
+}
